@@ -1,0 +1,80 @@
+.Calculator {
+  max-width: 554px;
+  aspect-ratio: 0.692;
+  padding: 10px 44px 46px;
+  display: flex;
+  flex-direction: column;
+
+  background: linear-gradient(155.233deg, #28518e 0%, #3a77d1 100%);
+  border-radius: 18px;
+
+  box-shadow: 0px 82px 158px 0px rgba(0, 0, 0, 35%), 0px 24px 47px 0px rgba(0, 0, 0, 23%),
+    0px 10px 19px 0px rgba(0, 0, 0, 17%), 0px 3px 7px 0px rgba(0, 0, 0, 12%);
+}
+
+.Calculator__history {
+  flex: 1;
+  font-size: 24px;
+  line-height: 32px;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+}
+
+.Calculator__input {
+  margin-bottom: 18px;
+  margin-top: 28px;
+
+  font-size: 56px;
+  font-weight: 800;
+  text-align: end;
+  line-height: 80px;
+}
+
+.Calculator__divider {
+  width: 100%;
+  height: 2px;
+  margin-top: -2px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.Calculator__numpad {
+  margin-top: 37px;
+  align-self: center;
+  display: grid;
+  grid-template-rows: repeat(5, 80px);
+  grid-template-columns: repeat(4, 100px);
+  gap: 16px 20px;
+  place-items: center;
+}
+
+.Calculator__numpad-button {
+  width: 80px;
+  height: 80px;
+  font-size: 36px;
+  border-radius: 50%;
+  transition: background 0.2s ease-in-out;
+}
+
+.Calculator__numpad-button_solid {
+  background: #ffffff;
+  color: #2b589a;
+}
+
+@media (hover: hover) {
+  .Calculator__numpad-button:hover {
+    background-color: rgba(255, 255, 255, 12%);
+  }
+  .Calculator__numpad-button_solid:hover {
+    background-color: rgba(255, 255, 255, 88%);
+  }
+}
+
+@media (hover: none) {
+  .Calculator__numpad-button:active {
+    background-color: rgba(255, 255, 255, 12%);
+  }
+  .Calculator__numpad-button_solid:active {
+    background-color: rgba(255, 255, 255, 88%);
+  }
+}
