@@ -3,11 +3,10 @@
 }
 :root {
   font-family: Geometria, sans-serif;
-  font-weight: medium;
+  font-weight: 500;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background: linear-gradient(122.763deg, #ffa1a1 0%, #ff7b7b 100%);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,6 +20,10 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+
+  background: linear-gradient(122.763deg, #ffa1a1 0%, #ff7b7b 100%);
+  background-repeat: no-repeat;
+  overflow: hidden;
 }
 
 p {
@@ -43,4 +46,9 @@ input {
   font-family: inherit;
   border: none;
   background: transparent;
+}
+
+input:focus,
+input:focus-within {
+  outline: none;
 }

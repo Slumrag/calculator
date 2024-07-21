@@ -1,12 +1,24 @@
 .Calculator {
-  max-width: 554px;
-  aspect-ratio: 0.692;
-  padding: 10px 44px 46px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
   display: flex;
-  flex-direction: column;
+
+  font-size: clamp(16px, 5vw, 24px);
+  padding: 1.1875em 1em;
+}
+
+.Calculator__body {
+  max-width: 400px;
+
+  width: 100%;
+  aspect-ratio: 0.692;
+  padding: min(calc(46 / 554 * 100%), 33px);
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr min-content 0fr minmax(min-content, 65%);
 
   background: linear-gradient(155.233deg, #28518e 0%, #3a77d1 100%);
-  border-radius: 18px;
 
   box-shadow: 0px 82px 158px 0px rgba(0, 0, 0, 35%), 0px 24px 47px 0px rgba(0, 0, 0, 23%),
     0px 10px 19px 0px rgba(0, 0, 0, 17%), 0px 3px 7px 0px rgba(0, 0, 0, 12%);
@@ -14,21 +26,30 @@
 
 .Calculator__history {
   flex: 1;
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 0.75em;
+  line-height: 1.3;
   display: flex;
   align-items: end;
   justify-content: end;
 }
 
 .Calculator__input {
-  margin-bottom: 18px;
-  margin-top: 28px;
+  width: 100%;
 
-  font-size: 56px;
+  font-size: 1.75em;
   font-weight: 800;
   text-align: end;
-  line-height: 80px;
+  line-height: 1.5;
+  border-radius: 18px;
+
+  padding: 0.1em 0;
+  margin-bottom: 0.4625em;
+  margin-top: 0.775em;
+}
+
+.Calculator__input:focus,
+.Calculator__input:focus-within {
+  background: rgba(255, 255, 255, 12%);
 }
 
 .Calculator__divider {
@@ -39,19 +60,23 @@
 }
 
 .Calculator__numpad {
-  margin-top: 37px;
+  width: 100%;
+  margin-top: 1.2em;
   align-self: center;
   display: grid;
-  grid-template-rows: repeat(5, 80px);
-  grid-template-columns: repeat(4, 100px);
-  gap: 16px 20px;
+  grid-template-rows: repeat(5, minmax(min-content, 58px));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* gap: 0.5em 0.625em; */
   place-items: center;
+
+  font-size: 1.125em;
 }
 
 .Calculator__numpad-button {
-  width: 80px;
-  height: 80px;
-  font-size: 36px;
+  max-width: 58px;
+  width: 100%;
+  aspect-ratio: 1/1;
+  font-size: inherit;
   border-radius: 50%;
   transition: background 0.2s ease-in-out;
 }

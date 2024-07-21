@@ -10,7 +10,7 @@
 @font-face {
   font-family: 'Geometria';
   font-style: normal;
-  font-weight: medium;
+  font-weight: 500;
   src: local('Geometria-Medium'), url('Geometria-Medium.woff') format('woff');
 }
 
