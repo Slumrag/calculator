@@ -1,82 +1,87 @@
+import { ChangeEventHandler, KeyboardEventHandler, useState } from 'react';
 import './Calculator.css';
+import { Numpad } from './components/Numpad/Numpad';
+import { CalculatorInput } from './components/CalculatorInput/CalculatorInput';
 
 function Calculator() {
+  const [value, setValue] = useState('');
+  const [history, setHistory] = useState('');
+  const clearInput = (): void => {
+    setValue('');
+  };
+
+  const appendValue = (val: string): void => {
+    setValue((v) => v + val);
+  };
+
+  const evaluateExpression = (exp: string): number => {
+    setHistory(exp);
+    return 0;
+  };
+
+  const handleNumpadClick: (val: string) => void = (buttonValue) => {
+    console.log(buttonValue);
+
+    switch (buttonValue) {
+      case 'equals':
+        evaluateExpression(value);
+        clearInput();
+        break;
+      case 'clear':
+        clearInput();
+        break;
+      case 'add':
+        appendValue('+');
+        break;
+      case 'subtract':
+        appendValue('-');
+        break;
+      case 'multiply':
+        appendValue('*');
+        break;
+      case 'divide':
+        appendValue('/');
+        break;
+      case 'percent':
+        appendValue('%');
+        break;
+      case 'sqrt':
+        setValue((v) => 'sqrt(' + v);
+        break;
+      default:
+        appendValue(buttonValue);
+        break;
+    }
+  };
+
+  const handleInputChange: ChangeEventHandler = (event) => {
+    const input = event.target as HTMLInputElement;
+    setValue(input.value);
+  };
+
+  const handleKeyUp: KeyboardEventHandler = (event) => {
+    switch (event.key) {
+      case 'Enter':
+        evaluateExpression(value);
+        clearInput();
+        break;
+      case 'Escape':
+        clearInput();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
-    <div className='Calculator'>
+    <div className='Calculator' onKeyUp={handleKeyUp} data-testid='Calculator'>
       <div className='Calculator__body'>
-        <p className='Calculator__history'>20×80×0,5</p>
-        <input className='Calculator__input' type='numeric' value={`500`} />
+        <p className='Calculator__history' data-testid='Calculator__history'>
+          {history}
+        </p>
+        <CalculatorInput value={value} handleInputChange={handleInputChange} />
         <div className='Calculator__divider'></div>
-        <div className='Calculator__numpad'>
-          <button className='Calculator__numpad-button' id='clear'>
-            C
-          </button>
-          <button className='Calculator__numpad-button' id='sqrt'>
-            √
-          </button>
-          <button className='Calculator__numpad-button' id='percent'>
-            %
-          </button>
-          <button className='Calculator__numpad-button' id='divide'>
-            /
-          </button>
-          {/* row1 */}
-          <button className='Calculator__numpad-button' id='7'>
-            7
-          </button>
-          <button className='Calculator__numpad-button' id='8'>
-            8
-          </button>
-
-          <button className='Calculator__numpad-button' id='9'>
-            9
-          </button>
-          <button className='Calculator__numpad-button' id='multiply'>
-            ×
-          </button>
-          {/* row2 */}
-          <button className='Calculator__numpad-button' id='4'>
-            4
-          </button>
-
-          <button className='Calculator__numpad-button' id='5'>
-            5
-          </button>
-          <button className='Calculator__numpad-button' id='6'>
-            6
-          </button>
-          <button className='Calculator__numpad-button' id='subtract'>
-            -
-          </button>
-          {/* row3 */}
-          <button className='Calculator__numpad-button' id='1'>
-            1
-          </button>
-
-          <button className='Calculator__numpad-button' id='2'>
-            2
-          </button>
-          <button className='Calculator__numpad-button' id='3'>
-            3
-          </button>
-          <button className='Calculator__numpad-button' id='add'>
-            +
-          </button>
-
-          {/* row4 */}
-          <button className='Calculator__numpad-button' id='00'>
-            00
-          </button>
-          <button className='Calculator__numpad-button' id='0'>
-            0
-          </button>
-          <button className='Calculator__numpad-button' id=','>
-            ,
-          </button>
-          <button className='Calculator__numpad-button Calculator__numpad-button_solid' id='equals'>
-            =
-          </button>
-        </div>
+        <Numpad handleNumpadClick={handleNumpadClick} />
       </div>
     </div>
   );
