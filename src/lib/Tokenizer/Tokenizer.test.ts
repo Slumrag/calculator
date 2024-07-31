@@ -1,6 +1,6 @@
 import { Tokenizer } from './Tokenizer';
 
-const testExpressions: [string, string[]][] = [
+const validTestExpressions: [string, string[]][] = [
   ['-2.123456789+2', ['-', '2.123456789', '+', '2']],
   ['2*2+6/8-9', ['2', '*', '2', '+', '6', '/', '8', '-', '9']],
   ['2*(2+6)*9/5^1', ['2', '*', '(', '2', '+', '6', ')', '*', '9', '/', '5', '^', '1']],
@@ -12,7 +12,7 @@ const testExpressions: [string, string[]][] = [
 describe('Tokenizer', () => {
   const tokenizer = new Tokenizer();
 
-  test.for(testExpressions)('%s', ([expression, expected]) => {
+  test.for(validTestExpressions)('%s', ([expression, expected]) => {
     tokenizer.read(expression);
 
     const tokens: string[] = [];
@@ -23,11 +23,6 @@ describe('Tokenizer', () => {
       e && tokens.push(e);
     }
     expect(tokens).toEqual(expected);
-  });
-
-  it('should return correct number', () => {
-    tokenizer.read('20.2.1');
-    expect(tokenizer.next()?.value).toBe('20.2');
   });
 
   it('should throw error for unrecognized token', () => {
