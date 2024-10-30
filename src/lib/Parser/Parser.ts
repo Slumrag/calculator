@@ -24,7 +24,7 @@ export const operators: Operators = {
 
   '*': [{ type: 'BINARY', precedence: 3 }],
   '/': [{ type: 'BINARY', precedence: 3 }],
-  '%': [{ type: 'POSTFIX', precedence: 4 }],
+  '%': [{ type: 'POSTFIX', precedence: 5 }],
   '^': [{ type: 'BINARY', precedence: 5 }],
 };
 /*
@@ -33,16 +33,18 @@ export const operators: Operators = {
 <Expression> ::= <Prefix> (<Infix>)*
 
 <Prefix> ::= <ParenthesizedExpression>
-  | <UnaryExpression>
+  | <PrefixExpression>
   | <FunctionExpression>
   | <NUMBER>
 
 <Infix> ::= ("+" | "-" | "*" | "/" | "^") <Expression>
+| <PostfixOperator>
 
 <ParenthesizedExpression> ::= "(" <Expression> ")"
 
-<UnaryExpression> ::= "-" <Expression>
+<PrefixExpression> ::= "-" <Expression>
 
+<PostfixOperator> ::=   "%"
 
 <FunctionExpression> ::= <IDENTIFIER> <ParenthesizedExpression>
 
@@ -136,7 +138,9 @@ export class Parser {
     let left: number = this.#Prefix();
 
     while (precedence < this.#getPrecedence(this.#lookahead)) {
-      left = this.#lookahead !== null ? this.#Infix(left, this.#lookahead.type) : NaN;
+      if (this.#lookahead !== null) {
+        left = this.#Infix(left, this.#lookahead.type);
+      }
     }
 
     return left;
@@ -145,7 +149,7 @@ export class Parser {
   /**
    * Prefix
    *    = ParenthesizedExpression
-   *    / UnaryExpression
+   *    / PrefixExpression
    *    / FunctionExpression
    *    / NUMBER
    */
@@ -154,7 +158,7 @@ export class Parser {
       return this.#ParenthesizedExpression();
     }
 
-    if (this.#isOperatorUnary(this.#lookahead)) {
+    if (this.#isOperatorPrefix(this.#lookahead)) {
       return this.#PrefixExpression();
     }
 
@@ -170,8 +174,12 @@ export class Parser {
   /**
    * Infix
    *    = ("+" / "-" / "*" / "/" / "^") Expression
+   * | PostfixOperator
    */
   #Infix(left: number, operatorType: TokenType): number {
+    if (this.#isOperatorPostfix(this.#lookahead)) {
+      return this.#PostfixExpression(left);
+    }
     const token = this.#eat(operatorType);
     const newPrec = this.#getPrecedence(token); // newPrec is the new precedence we pass to the "Expression" method
     switch (token.type) {
@@ -185,8 +193,6 @@ export class Parser {
         return left / this.#Expression(newPrec);
       case TokenTypes.EXPONENTIATION:
         return left ** this.#Expression(newPrec - 1);
-      case TokenTypes.PERCENT:
-        return left * 0.01;
     }
 
     throw new SyntaxError(`Unrecognized operation ${token.type}`);
@@ -204,20 +210,37 @@ export class Parser {
     return expression;
   }
   /**
-   * UnaryExpression
+   * PrefixExpression
    *    = "-" Expression
    */
   #PrefixExpression(): number {
-    const unary = this.#lookahead;
-    if (unary === null) {
+    const token = this.#lookahead;
+    if (token === null) {
       throw new Error('End of Input');
     }
-    this.#eat(unary?.type);
-    switch (unary?.type) {
-      case '-':
-        return -this.#Expression(this.#getPrecedence(unary, true));
+    this.#eat(token?.type);
+    switch (token?.type) {
+      case TokenTypes.SUBTRACTION:
+        return -this.#Expression(this.#getPrecedence(token, true));
       default:
-        throw new Error(`Unrecognized unary operator ${unary.type}`);
+        throw new Error(`Unrecognized prefix operator ${token.type}`);
+    }
+  }
+  /**
+   * PostfixExpression
+   *    =  Expression "%"
+   */
+  #PostfixExpression(value: number) {
+    const token = this.#lookahead;
+    if (token === null) {
+      throw new Error('End of Input');
+    }
+    this.#eat(token?.type);
+    switch (token?.type) {
+      case TokenTypes.PERCENT:
+        return value * 0.01;
+      default:
+        throw new Error(`Unrecognized postfix operator ${token.type}`);
     }
   }
   /**
